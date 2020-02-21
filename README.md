@@ -14,7 +14,7 @@ mvn clean install
 Файл `questionnaire-0.0.1.jar`, сформированный на этапе сборки, разместить в отдельной папке (например questionnaire)
 и запустить приложение в командной строке следующим образом:
 
-java -jar questionnaire-1.0.0.jar
+java -jar questionnaire-0.0.1.jar
 
 Настройки
 ------
