@@ -1,13 +1,9 @@
 package questionnaire.controller;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import questionnaire.entities.Answer;
-import questionnaire.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import questionnaire.entities.Answer;
+import questionnaire.service.AnswerService;
 
 import java.sql.SQLException;
 import java.util.List;

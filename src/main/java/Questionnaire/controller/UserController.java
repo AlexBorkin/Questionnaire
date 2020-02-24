@@ -44,6 +44,8 @@ public class UserController
 
         User userExist = userService.checkExist(user.getLogin());
 
+        //=============
+
         if (userExist == null)
         {
             try
