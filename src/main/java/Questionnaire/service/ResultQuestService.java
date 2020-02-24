@@ -1,6 +1,9 @@
 package questionnaire.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import questionnaire.entities.QuestAnswerRef;
 import questionnaire.entities.ResultQuest;
+import questionnaire.mappers.QuestAnswerRefMapper;
 import questionnaire.mappers.ResultQuestMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ public class ResultQuestService
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public ResultQuestService(DataSource dataSource)
     {
         this.dataSource = dataSource;
@@ -29,7 +33,7 @@ public class ResultQuestService
 
     public void create(ResultQuest resultQuest)
     {
-        String sqlQuery = "insert into public.\"resultQuest\" (\"userId\", \"questId\", \"answerId\") values(?,?,?);";
+        String sqlQuery = "insert into public.\"resultQuest\"(\"userId\", \"questId\", \"answerId\") values(?,?,?);";
 
         jdbcTemplate.update(sqlQuery, resultQuest.getUserId(), resultQuest.getQuestId(), resultQuest.getAnswerId());
     }
@@ -40,6 +44,14 @@ public class ResultQuestService
         List<ResultQuest> listResult = jdbcTemplate.query(sqlQuery, new Integer[]{userId, questId}, new ResultQuestMapper());
 
         return !listResult.isEmpty() && listResult != null ? listResult.get(0) : null;
+    }
+
+    public List<ResultQuest> readByUser(Integer userId)
+    {
+        String sqlQuery = "select * from public.\"resultQuest\" where \"userId\" = ?;";
+        List<ResultQuest> listResult = jdbcTemplate.query(sqlQuery, new Integer[]{userId}, new ResultQuestMapper());
+
+        return listResult;
     }
 
     public void update(Integer userId, Integer questId, ResultQuest resultQuest)
@@ -54,5 +66,14 @@ public class ResultQuestService
         jdbcTemplate.update(sqlQuery, userId, questId);
     }
 
+    public QuestAnswerRef checkExistAnswer(Integer questId, Integer answerId)
+    {
+        List<QuestAnswerRef> listAnswer;
+        String sqlQuery = "select * from public.\"questAnswerRef\" where \"questId\" = ? and \"answerId\" = ?;";
+
+        listAnswer = jdbcTemplate.query(sqlQuery, new Integer[]{questId, answerId}, new QuestAnswerRefMapper());
+
+        return listAnswer != null && listAnswer.size() > 0 ? listAnswer.get(0) : null;
+    }
 
 }

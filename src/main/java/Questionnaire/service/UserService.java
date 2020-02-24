@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -21,7 +22,7 @@ public class UserService
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
     }
 
-    public void create(User user)
+    public void create(User user) throws SQLException
     {
         String sqlQuery = "insert into public.users(\"firstName\", \"lastName\", login, \"userPassword\") values (?, ?, ?, ?);";
 
@@ -40,6 +41,13 @@ public class UserService
         return listUser;
     }
 
+    public User checkExist(String login)
+    {
+        String sqlQuery = "select * from public.\"users\" where \"login\" = ? limit 1;";
+        List<User> listUser = jdbcTemplate.query(sqlQuery, new String[]{login}, new UserMapper());
+        return !listUser.isEmpty() && listUser != null ? listUser.get(0) :  null;
+    }
+
     public User read(int id)
     {
         String sqlQuery = "select * from public.users where \"userId\" = ?;";
@@ -50,7 +58,7 @@ public class UserService
     public void update(int id, User user)
     {
         String sqlQuery = "update public.users " +
-                "set \"firstName\"=?, \"lastName\"=?, login=?, \"userPassword\"=? where \"userId\" = ?;";
+                "set \"firstName\"=?, \"lastName\"=?, \"login\"=?, \"userPassword\"=? where \"userId\" = ?;";
 
         jdbcTemplate.update(sqlQuery,
                 user.getFirstName(),

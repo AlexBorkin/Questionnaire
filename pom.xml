@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>questionnaire</groupId>
 	<artifactId>questionnaire</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>Questionnaire</name>
+	<version>0.0.1</version>
+	<name>questionnaire</name>
 	<description>Project</description>
 
 	<properties>

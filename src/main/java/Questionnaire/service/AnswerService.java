@@ -31,18 +31,6 @@ public class AnswerService
         return listAnswer;
     }
 
-    public List<Answer> getAllByQuest(Integer questId)
-    {
-        String sqlQuery;
-        List<Answer> listAnswer;
-
-        sqlQuery = "select * from public.answers where \"questId\" = ?;";
-
-        listAnswer = jdbcTemplate.query(sqlQuery, new Integer[]{questId}, new AnswerMapper());
-
-        return listAnswer;
-    }
-
     public Answer read(Integer answerId)
     {
         String sqlQuery;

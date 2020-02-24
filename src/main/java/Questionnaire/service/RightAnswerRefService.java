@@ -1,5 +1,6 @@
 package questionnaire.service;
 
+import org.springframework.stereotype.Service;
 import questionnaire.entities.RightAnswerRef;
 import questionnaire.mappers.RightAnswerRefMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 
+@Service
 public class RightAnswerRefService
 {
     private final DataSource dataSource;
@@ -28,7 +30,7 @@ public class RightAnswerRefService
         return list;
     }
 
-    public RightAnswerRef readByQuest(Integer questId)
+    public RightAnswerRef read(Integer questId)
     {
         String sqlQuery;
         List<RightAnswerRef> listRightAnswerRef;
@@ -49,7 +51,7 @@ public class RightAnswerRefService
 
     public void update(Integer questId, RightAnswerRef rightAnswerRef)
     {
-        String sqlQuery = "update public.\"rightAnswerRef\" set \"answerText\" = ? where \"questId\" = ?;";
+        String sqlQuery = "update public.\"rightAnswerRef\" set \"answerId\" = ? where \"questId\" = ?;";
 
         jdbcTemplate.update(sqlQuery, rightAnswerRef.getAnswerId(), questId);
     }

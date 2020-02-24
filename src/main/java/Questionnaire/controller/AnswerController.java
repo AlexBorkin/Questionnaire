@@ -1,11 +1,15 @@
 package questionnaire.controller;
 
-
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import questionnaire.entities.Answer;
 import questionnaire.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -34,21 +38,41 @@ public class AnswerController
     }
 
     @PostMapping (value = "/answer")
-    public void create(@RequestBody Answer answer)
+    public void create(@RequestBody Answer answer) throws SQLException
     {
-        answerService.create(answer);
+        try
+        {
+            answerService.create(answer);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("Ошибка создания записи в таблице ответов: " + e.getMessage());
+        }
     }
 
     @PutMapping (value = "/answer/{answerId}")
-    public void update(@PathVariable(name = "answerId") Integer answerId, @RequestBody Answer answer)
+    public void update(@PathVariable(name = "answerId") Integer answerId, @RequestBody Answer answer) throws SQLException
     {
-        answerService.update(answerId, answer);
+        try
+        {
+            answerService.update(answerId, answer);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("Ошибка обновления записи в таблице ответов: " + e.getMessage());
+        }
     }
 
     @DeleteMapping (value = "/answer/{answerId}")
-    public void delete(@PathVariable(name = "answerId") Integer answerId)
+    public void delete(@PathVariable(name = "answerId") Integer answerId) throws SQLException
     {
-        answerService.delete(answerId);
+        try
+        {
+            answerService.delete(answerId);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("Ошибка удаления записи в таблице ответов: " + e.getMessage());
+        }
     }
-
 }

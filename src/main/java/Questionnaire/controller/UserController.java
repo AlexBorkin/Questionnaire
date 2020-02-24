@@ -1,12 +1,16 @@
 package questionnaire.controller;
 
-import questionnaire.entities.User;
-import questionnaire.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import questionnaire.entities.User;
+import questionnaire.service.UserService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -20,59 +24,72 @@ public class UserController
         this.userService = userService;
     }
 
-    @PostMapping(value = "/users")
-    public void create(@RequestBody User user)
+    @GetMapping(value = "/user")
+    public List<User> getAll()
     {
-        userService.create(user);
+        return userService.getAll();
     }
 
-    @GetMapping(value = "/users")
-    public ResponseEntity<List<User>> getAll()
+    @GetMapping(value = "/user/{id}")
+    public User read(@PathVariable(name ="id") Integer id)
     {
-        List<User> listUsers = userService.getAll();
+        return userService.read(id);
+    }
 
-        ResponseEntity<List<User>> response;
+    @PostMapping(value = "/user")
+    public ResponseEntity<ObjectNode> create(@RequestBody User user) throws SQLException, JsonProcessingException {
+        ResponseEntity<ObjectNode> response;
+        String retStr;
+        ObjectNode objectNode = new ObjectNode(JsonNodeFactory.instance);
 
-        if (listUsers != null && !listUsers.isEmpty())
+        User userExist = userService.checkExist(user.getLogin());
+
+        if (userExist == null)
         {
-            response = new ResponseEntity<>(listUsers, HttpStatus.OK);
+            try
+            {
+                userService.create(user);
+                objectNode.put("ОК", "Пользователь успешно добавлен!");
+                response = new ResponseEntity<ObjectNode>(objectNode, HttpStatus.OK);
+            }
+            catch (Exception e)
+            {
+                throw new SQLException("Ошибка создания записи в таблице пользователей: " + e.getMessage());
+            }
         }
         else
         {
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            retStr = String.format("Пользователь с логином %s уже существует!", user.getLogin());
+            objectNode.put("Ошибка", retStr);
+            response = new ResponseEntity<ObjectNode>(objectNode, HttpStatus.BAD_REQUEST);
         }
 
-        return response;
+        return  response;
     }
 
-    @GetMapping(value = "/users/{id}")
-    public ResponseEntity<User> read(@PathVariable(name ="id") Integer id)
+    @PutMapping(value="/user/{id}")
+    public void update(@PathVariable(name="id") Integer id, @RequestBody User user) throws SQLException
     {
-        ResponseEntity<User> response;
-
-        User user = userService.read(id);
-
-        if (user != null)
+        try
         {
-            response = new ResponseEntity<>(user, HttpStatus.OK);
+            userService.update(id, user);
         }
-        else
+        catch (Exception e)
         {
-            response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new SQLException("Ошибка обновления записи в таблице пользователей: " + e.getMessage());
         }
-
-        return response;
     }
 
-    @PutMapping(value="/users/{id}")
-    public void update(@PathVariable(name="id") Integer id, @RequestBody User user)
+    @DeleteMapping(value="/user/{id}")
+    public void delete(@PathVariable(name="id") Integer id) throws SQLException
     {
-        userService.update(id, user);
-    }
-
-    @DeleteMapping(value="/users/{id}")
-    public void delete(@PathVariable(name="id") Integer id)
-    {
-        userService.delete(id);
+        try
+        {
+            userService.delete(id);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("Ошибка удаления записи в таблице пользователей: " + e.getMessage());
+        }
     }
 }
