@@ -49,7 +49,7 @@ public class QuestAnswerRefService
 
             listAnswer = jdbcTemplate.query(sqlQuery, new Integer[]{questId, answerId}, new QuestAnswerRefMapper());
 
-            return listAnswer != null && listAnswer.size() > 0 ? listAnswer.get(0) : null;
+            return (listAnswer != null && listAnswer.size() > 0) ? listAnswer.get(0) : null;
         }
 
         public void create(QuestAnswerRef questAnswerRef)

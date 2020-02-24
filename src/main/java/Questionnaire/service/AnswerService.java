@@ -40,7 +40,7 @@ public class AnswerService
 
         listAnswer = jdbcTemplate.query(sqlQuery, new Integer[]{answerId}, new AnswerMapper());
 
-        return listAnswer != null && listAnswer.size() > 0 ? listAnswer.get(0) : null;
+        return (listAnswer != null && listAnswer.size() > 0) ? listAnswer.get(0) : null;
     }
 
     public void create(Answer answer)
