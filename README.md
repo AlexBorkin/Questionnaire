@@ -28,12 +28,17 @@ java -jar questionnaire-0.0.1.jar
 
 После запуска приложения и инициализации базы данных установить параметр spring.flyway.enabled=false
 
+Документация REST сервиса
+------
+http://localhost:8080/swagger-ui.html
+
 Используемые технологии
 -------
 * Java 8
 * Spring Boot 2.2.4
 * Postgresql 12
 * flywaydb
+* Swagger
 
 
 
