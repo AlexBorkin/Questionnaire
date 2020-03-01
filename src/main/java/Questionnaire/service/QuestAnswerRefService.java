@@ -24,7 +24,14 @@ public class QuestAnswerRefService
 
         public List<QuestAnswerRef> getAll()
         {
-            String sqlQuery = "select * from public.\"questAnswerRef\";";
+            String sqlQuery = "select QUEST.\"questId\", QUEST.\"questText\", ANSW.\"answerId\", ANSW.\"answerText\" \n" +
+                    "from public.\"questAnswerRef\" as QAF\n" +
+                    "left join public.\"questions\" as QUEST\n" +
+                    "on QUEST.\"questId\" = QAF.\"questId\"\n" +
+                    "left join public.\"answers\" as ANSW\n" +
+                    "on ANSW.\"answerId\" = QAF.\"answerId\"\n" +
+                    "order by QUEST.\"questId\";";
+
             List<QuestAnswerRef> list = jdbcTemplate.query(sqlQuery, new QuestAnswerRefMapper());
 
             return list;
@@ -35,7 +42,14 @@ public class QuestAnswerRefService
             String sqlQuery;
             List<QuestAnswerRef> listAnswer;
 
-            sqlQuery = "select * from public.\"questAnswerRef\" where \"questId\" = ?;";
+             sqlQuery = "select QUEST.\"questId\", QUEST.\"questText\", ANSW.\"answerId\", ANSW.\"answerText\" \n" +
+                     "from public.\"questAnswerRef\" as QAF\n" +
+                     "left join public.\"questions\" as QUEST\n" +
+                     "on QUEST.\"questId\" = QAF.\"questId\"\n" +
+                     "left join public.\"answers\" as ANSW\n" +
+                     "on ANSW.\"answerId\" = QAF.\"answerId\"\n" +
+                     "where QAF.\"questId\" = ?\n" +
+                     "order by QUEST.\"questId\";";
 
             listAnswer = jdbcTemplate.query(sqlQuery, new Integer[]{questId}, new QuestAnswerRefMapper());
 
