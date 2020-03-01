@@ -5,6 +5,10 @@ public class ResultQuest
     private Integer userId;
     private Integer questId;
     private Integer answerId;
+    private String  firstName;
+    private String  lastName;
+    private String  questText;
+    private String  answerText;
 
     public ResultQuest()
     {
@@ -33,5 +37,37 @@ public class ResultQuest
 
     public void setAnswerId(Integer answerId) {
         this.answerId = answerId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getQuestText() {
+        return questText;
+    }
+
+    public void setQuestText(String questText) {
+        this.questText = questText;
+    }
+
+    public String getAnswerText() {
+        return answerText;
+    }
+
+    public void setAnswerText(String answerText) {
+        this.answerText = answerText;
     }
 }

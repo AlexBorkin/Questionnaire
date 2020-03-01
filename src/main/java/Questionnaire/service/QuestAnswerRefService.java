@@ -56,16 +56,6 @@ public class QuestAnswerRefService
             return listAnswer;
         }
 
-        public QuestAnswerRef checkExistAnswer(Integer questId, Integer answerId)
-        {
-            List<QuestAnswerRef> listAnswer;
-            String sqlQuery = "select * from public.\"questAnswerRef\" where \"questId\" = ? and \"answerId\" = ?;";
-
-            listAnswer = jdbcTemplate.query(sqlQuery, new Integer[]{questId, answerId}, new QuestAnswerRefMapper());
-
-            return (listAnswer != null && listAnswer.size() > 0) ? listAnswer.get(0) : null;
-        }
-
         public void create(QuestAnswerRef questAnswerRef)
         {
             String sqlQuery = "insert into public.\"questAnswerRef\" (\"questId\", \"answerId\") values(?,?);";

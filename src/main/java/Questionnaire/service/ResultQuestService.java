@@ -26,7 +26,16 @@ public class ResultQuestService
 
     public List<ResultQuest> getAll()
     {
-        String sqlQuery = "select * from public.\"resultQuest\";";
+        String sqlQuery = "select USERS.\"userId\", USERS.\"firstName\", USERS.\"lastName\", QUEST.\"questId\", \n" +
+                "QUEST.\"questText\", ANSW.\"answerId\", ANSW.\"answerText\" \n" +
+                "from public.\"resultQuest\" as RES\n" +
+                "left join public.\"questions\" as QUEST\n" +
+                "on QUEST.\"questId\" = RES.\"questId\"\n" +
+                "left join public.\"answers\" as ANSW\n" +
+                "on ANSW.\"answerId\" = RES.\"answerId\"\n" +
+                "left join public.\"users\" as USERS\n" +
+                "on USERS.\"userId\" = RES.\"userId\"\n" +
+                "order by USERS.\"userId\", QUEST.\"questId\";";
 
         return jdbcTemplate.query(sqlQuery, new ResultQuestMapper());
     }
@@ -40,7 +49,18 @@ public class ResultQuestService
 
     public ResultQuest read(Integer userId, Integer questId)
     {
-        String sqlQuery = "select * from public.\"resultQuest\" where \"userId\" = ? and \"questId\" = ?;";
+        String sqlQuery = "select USERS.\"userId\", USERS.\"firstName\", USERS.\"lastName\", QUEST.\"questId\", \n" +
+                "QUEST.\"questText\", ANSW.\"answerId\", ANSW.\"answerText\" \n" +
+                "from public.\"resultQuest\" as RES\n" +
+                "left join public.\"questions\" as QUEST\n" +
+                "on QUEST.\"questId\" = RES.\"questId\"\n" +
+                "left join public.\"answers\" as ANSW\n" +
+                "on ANSW.\"answerId\" = RES.\"answerId\"\n" +
+                "left join public.\"users\" as USERS\n" +
+                "on USERS.\"userId\" = RES.\"userId\"\n" +
+                "where RES.\"userId\" = ? and RES.\"questId\" = ?;";
+
+
         List<ResultQuest> listResult = jdbcTemplate.query(sqlQuery, new Integer[]{userId, questId}, new ResultQuestMapper());
 
         return !listResult.isEmpty() && listResult != null ? listResult.get(0) : null;
@@ -48,7 +68,18 @@ public class ResultQuestService
 
     public List<ResultQuest> readByUser(Integer userId)
     {
-        String sqlQuery = "select * from public.\"resultQuest\" where \"userId\" = ?;";
+        String sqlQuery = "select USERS.\"userId\", USERS.\"firstName\", USERS.\"lastName\", QUEST.\"questId\", \n" +
+                "QUEST.\"questText\", ANSW.\"answerId\", ANSW.\"answerText\" \n" +
+                "from public.\"resultQuest\" as RES\n" +
+                "left join public.\"questions\" as QUEST\n" +
+                "on QUEST.\"questId\" = RES.\"questId\"\n" +
+                "left join public.\"answers\" as ANSW\n" +
+                "on ANSW.\"answerId\" = RES.\"answerId\"\n" +
+                "left join public.\"users\" as USERS\n" +
+                "on USERS.\"userId\" = RES.\"userId\"\n" +
+                "where RES.\"userId\" = ?" +
+                "order by USERS.\"userId\", QUEST.\"questId\";";
+
         List<ResultQuest> listResult = jdbcTemplate.query(sqlQuery, new Integer[]{userId}, new ResultQuestMapper());
 
         return listResult;
@@ -69,7 +100,15 @@ public class ResultQuestService
     public QuestAnswerRef checkExistAnswer(Integer questId, Integer answerId)
     {
         List<QuestAnswerRef> listAnswer;
-        String sqlQuery = "select * from public.\"questAnswerRef\" where \"questId\" = ? and \"answerId\" = ?;";
+
+        String sqlQuery = "select QUEST.\"questId\", QUEST.\"questText\", ANSW.\"answerId\", ANSW.\"answerText\"" +
+                "from public.\"questAnswerRef\" as QAR " +
+                "left join public.\"questions\" as QUEST " +
+                "on QUEST.\"questId\" = QAR.\"questId\"" +
+                "left join public.\"answers\" as ANSW " +
+                "on ANSW.\"answerId\" = QAR.\"answerId\" " +
+                "where QAR.\"questId\" = ? and QAR.\"answerId\" = ?" +
+                "order by QUEST.\"questId\";";
 
         listAnswer = jdbcTemplate.query(sqlQuery, new Integer[]{questId, answerId}, new QuestAnswerRefMapper());
 
