@@ -152,7 +152,7 @@ CREATE TABLE public."resultQuest"
     "userId" integer NOT NULL,
     "questId" integer NOT NULL,
     "answerId" integer NOT NULL,
-    CONSTRAINT "userQuestAnswer_PK" PRIMARY KEY ("userId", "questId", "answerId"),
+    CONSTRAINT "userQuestAnswer_PK" PRIMARY KEY ("userId", "questId"),
     CONSTRAINT "answer_FK" FOREIGN KEY ("answerId")
         REFERENCES public.answers ("answerId") MATCH SIMPLE
         ON UPDATE RESTRICT
